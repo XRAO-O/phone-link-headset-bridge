@@ -1,5 +1,10 @@
 # Phone Link Headset Bridge
 
+[![Build](https://github.com/XRAO-O/phone-link-headset-bridge/actions/workflows/build.yml/badge.svg)](https://github.com/XRAO-O/phone-link-headset-bridge/actions/workflows/build.yml)
+[![Latest release](https://img.shields.io/github/v/release/XRAO-O/phone-link-headset-bridge)](https://github.com/XRAO-O/phone-link-headset-bridge/releases/latest)
+
+**[Download the latest release](https://github.com/XRAO-O/phone-link-headset-bridge/releases/latest)**
+
 Use a Bluetooth headset **with its microphone** for calls in Microsoft Phone Link.
 
 When Phone Link handles your phone's calls, Windows' own Bluetooth radio is busy being a hands-free
@@ -46,7 +51,8 @@ To undo this later, open Device Manager, uninstall the device (tick "delete the 
 
 ### 2. Install the bridge
 
-Download the latest release zip from the Releases page and extract it to a folder you can write to,
+Download `PhoneLinkHeadsetBridge.zip` from the
+[latest release](https://github.com/XRAO-O/phone-link-headset-bridge/releases/latest) and extract it to a folder you can write to,
 such as `Documents\PhoneLinkHeadsetBridge` (not Program Files – settings and pairing keys are stored
 next to the program).
 
@@ -121,7 +127,7 @@ Install [MSYS2](https://www.msys2.org/), then in the **MSYS2 MINGW64** shell:
 pacman -S --needed git mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja \
                    mingw-w64-x86_64-pkgconf mingw-w64-x86_64-portaudio
 
-git clone --recursive <repository url>
+git clone --recursive https://github.com/XRAO-O/phone-link-headset-bridge.git
 cd phone-link-headset-bridge
 cmake -S bridge -B bridge/build -G Ninja
 cmake --build bridge/build
