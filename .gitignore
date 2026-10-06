@@ -1,0 +1,10 @@
+# Build output
+bridge/build/
+bridge/bin/
+dist/
+
+# Local runtime files - these contain your headset address and Bluetooth pairing keys
+bridge.ini
+*.tlv
+*.pklg
+run*.txt

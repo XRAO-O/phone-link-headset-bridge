@@ -1,0 +1,58 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-pkgconf
+            mingw-w64-x86_64-portaudio
+
+      - name: Build
+        shell: msys2 {0}
+        run: |
+          cmake -S bridge -B bridge/build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build bridge/build
+          ./bridge/bin/headset_bridge.exe --version
+
+      - name: Package
+        shell: pwsh
+        run: |
+          $dir = "dist/PhoneLinkHeadsetBridge"
+          New-Item -ItemType Directory -Force $dir | Out-Null
+          Copy-Item bridge/bin/headset_bridge.exe, bridge/bin/headset_bridge_gui.exe, bridge/bridge.example.ini, README.md, LICENSE, THIRD_PARTY_NOTICES.md $dir
+          Copy-Item btstack/LICENSE "$dir/LICENSE-BTstack.txt"
+          Compress-Archive -Path "$dir/*" -DestinationPath dist/PhoneLinkHeadsetBridge.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PhoneLinkHeadsetBridge
+          path: dist/PhoneLinkHeadsetBridge
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/PhoneLinkHeadsetBridge.zip
+          generate_release_notes: true
